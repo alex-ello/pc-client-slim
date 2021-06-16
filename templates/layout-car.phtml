@@ -1,0 +1,73 @@
+<?php
+/**
+ * @var \PartsCatalogsSlim\View\LayoutView $view
+ */
+$carView = $view->getClientCar();
+?>
+<div class="mb-3">
+    <a class="btn btn-light w-100" data-toggle="collapse" href="#selectedCarInfo" role="button" aria-expanded="false"
+       aria-controls="selectedCarInfo">
+        <div class="d-flex align-items-center">
+            <div class="p-2 align-self-start bd-highlight"><i class="fa fa-car"></i></div>
+            <div class="flex-grow-1 align-self-start bd-highlight">
+                <div class="row text-left pl-2 pt-2">
+                    <div class="pl-3 col col-12 col-lg-auto">
+                        <strong><?= $carView->brand() ?> <?= $carView->name() ?></strong></div>
+                    <?php if ($carView->hasVin()) { ?>
+                    <div class="pl-3 col col-12 col-sm-auto">
+                        <span class="pb-1 text-muted"><small>Vin:</small></span> <?= $carView->vin() ?></div>
+                    <?php } ?>
+                    <?php if ($carView->hasFrame()) { ?>
+                        <div class="pl-3 col col-12 col-sm-auto">
+                            <span class="pb-1 text-muted"><small>Frame:</small></span> <?= $carView->frame() ?></div>
+                    <?php } ?>
+                    <?php if ($carView->hasYear()) { ?>
+                    <div class="pl-3 col col-12 col-sm-auto">
+                        <span class="pb-1 text-muted"><small>Year:</small></span> <?= $carView->year() ?></div>
+                    <?php } ?>
+                    <?php if ($carView->hasEngine()) { ?>
+                    <div class="pl-3 col col-12 col-sm-auto">
+                        <span class="pb-1 text-muted"><small>Engine:</small></span> <?= $carView->engine() ?></div>
+                    <?php } ?>
+                </div>
+            </div>
+            <div class="p-2 align-self-start bd-highlight"><i class="fa fa-info"></i></div>
+        </div>
+    </a>
+
+
+    <div class="collapse" id="selectedCarInfo">
+        <div class="card card-body">
+            <?php if ($carView->hasVin()) { ?>
+                <h6 class="dropdown-header">VIN</h6>
+                <p class="text-muted small pl-4 pr-4"><?= $carView->vin() ?></p>
+            <?php } ?>
+
+            <?php if ($carView->engine() || $carView->engineCode()) { ?>
+                <h6 class="dropdown-header">Engine</h6>
+                <p class="text-muted small pl-4 pr-4">
+                    <?php if ($carView->engine()) { ?>
+                        <?= $carView->engine() ?><br>
+                    <?php } ?>
+                    <small><?= $carView->engineCode() ?></small>
+                </p>
+            <?php } ?>
+
+            <?php if ($carView->transmission() || $carView->transmissionType()) { ?>
+                <h6 class="dropdown-header">Transmission</h6>
+                <p class="text-muted small pl-4 pr-4">
+                    <?php if ($carView->hasTransmission()) { ?>
+                        <?= $carView->transmission() ?><br>
+                    <?php } ?>
+                    <small><?= $carView->transmissionType() ?></small>
+                </p>
+            <?php } ?>
+
+            <?php if ($carView->hasDescription()) { ?>
+                <h6 class="dropdown-header">Description</h6>
+                <p class="text-muted small pl-4 pr-4"><?= $carView->description() ?></p>
+            <?php } ?>
+        </div>
+    </div>
+
+</div>

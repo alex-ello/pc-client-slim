@@ -1,0 +1,177 @@
+<?php
+/**
+ * @var \PartsCatalogsSlim\View\PartsView $view              ;
+ * @var string                               $searchUrlTemplate ;
+ */
+?>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-transparent pl-0 list-group-vertical">
+        <li class="breadcrumb-item"><a href="<?= $view->urlToCatalogs() ?>">Catalogs</a></li>
+        <li class="breadcrumb-item"><a href="<?= $view->urlToModels() ?>"><?= $view->catalogName() ?></a></li>
+        <li class="breadcrumb-item"><a href="<?= $view->urlToCars() ?>"><?= $view->modelName() ?></a>
+        <li class="breadcrumb-item"><a href="<?= $view->urlToGroups() ?>">
+            <?= $view->currentGroupName() ?: 'Groups' ?></a>
+        </li>
+
+        <li class="breadcrumb-item active" aria-current="page">Parts</li>
+    </ol>
+</nav>
+
+<?php require __DIR__ . "/layout-car.phtml" ?>
+
+<h3><?= $view->currentGroupName() ?: 'Groups' ?></h3>
+
+<ul class="nav nav-tabs d-lg-none">
+    <li class="nav-item w-50 text-center">
+        <a class="nav-link active" href="<?= $view->urlToParts() ?>"><i class="fa fa-list pr-1"></i> Parts list</a>
+    </li>
+    <li class="nav-item w-50 text-center">
+        <a class="nav-link" href="<?= $view->urlToSchema() ?>"><i class="fa fa-picture-o pr-1"></i> Scheme</a>
+    </li>
+</ul>
+
+<div class="row">
+    <div class="col col-lg-6">
+
+        <?php /* grouped */ ?>
+        <?php foreach ($view->partsGroups() as $partsGroupView) { ?>
+
+            <h4 class="mt-3"><?= $partsGroupView->name() ?></h4>
+            <pre class="card-text"><small class="text-muted"><?= $partsGroupView->description() ?></small></pre>
+
+            <?php /** Parts grouped by position number */ ?>
+            <?php /** @var \PartsCatalogsSlim\View\PartsView\PartView[] $parts */ ?>
+
+            <?php foreach ($partsGroupView->partsGrouped() as $positionNumber => $parts) { ?>
+
+                <div id="pos-<?= $positionNumber ?>" data-pos="sch-<?= $positionNumber ?>" class="table-pos mb-2">
+
+                    <a href="<?= $view->urlToSchema() ?>#sch-<?= $positionNumber ?>"
+                       class="badge badge-light d-lg-none"><?= $positionNumber ?></a>
+                    <a href="<?= $view->urlToParts() ?>#sch-<?= $positionNumber ?>"
+                       class="badge badge-light d-none d-lg-inline"><?= $positionNumber ?></a>
+
+                    <?php foreach ($parts as $partView) { ?>
+                        <div class="shadow list-group-item list-group-item-action rounded">
+                            <div class="row">
+                                <div class="col col-12 d-flex flex-row">
+                                    <h5 class="w-100">
+                                        <?= $partView->name() ?>
+                                        <?php if ($partView->hasNotice()) { ?>
+                                            <small class="text-muted">(<?= $partView->notice() ?>)</small>
+                                        <?php } ?>
+                                    </h5>
+                                    <small>
+                                        <a href="<?= $view->urlToSchema() ?>#sch-<?= $positionNumber ?>"
+                                           class="btn btn-outline-secondary btn-sm d-lg-none">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </a>
+                                        <a href="<?= $view->urlToParts() ?>#sch-<?= $positionNumber ?>"
+                                           class="btn btn-outline-secondary btn-sm d-none d-lg-block">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </a>
+                                    </small>
+                                </div>
+                                <?php if ($partView->hasDescription()) { ?>
+                                    <pre class="col-12 text-muted"><small><?= $partView->description() ?></small></pre>
+                                <?php } ?>
+
+                                <?php if ($partView->hasNumber()) { ?>
+                                    <div class="col col-sm-5 offset-sm-7 col-md-4 offset-md-8 col-lg-6 offset-lg-6 col-xl-4 offset-xl-8">
+                                        <a class="btn btn-sm btn-outline-danger w-100"
+                                           href="<?= $view->searchUrl($partView->number(), $searchUrlTemplate) ?>">
+                                            Price
+                                        </a>
+                                        <br>
+                                        <small>article: <a href="<?= $view->searchUrl($partView->number(), $searchUrlTemplate) ?>" class="text-muted"><?= $partView->number() ?></a></small>
+
+                                    </div>
+                                <?php } ?>
+
+                                <div class="col-sm-12">
+                                    <pre class="card-text"></pre>
+                                </div>
+                            </div>
+
+                        </div>
+                    <?php } ?>
+                </div>
+
+            <?php } ?>
+        <?php } ?>
+    </div>
+    <div class="col col-lg6 d-none d-lg-block p-0">
+        <div class="sticky-top">
+            <div id="scheme-box" class="position-relative">
+                <?php foreach ($view->partsPositionsGrouped() as $positionNumber => $partsPositions) { ?>
+                    <div class="scheme-pos" id="sch-<?= $positionNumber ?>" data-pos="pos-<?= $positionNumber ?>">
+                        <?php foreach ($partsPositions as $pp) { ?>
+                            <a class="part-pos" href="#pos-<?= $pp->number ?>"
+                               style="left: <?= $pp->x; ?>px; top: <?= $pp->y ?>px; width: <?= $pp->w; ?>px; height: <?= $pp->h; ?>px;"></a>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+                <img id="scheme-img" src="<?= $view->imgUrl() ?>" alt="" class="img-fluid w-100" style="">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-right mt-3 d-lg-none">
+    <a href="<?= $view->urlToSchema() ?>" class="btn btn-outline-secondary">
+        Scheme
+        <i class="fa fa-step-forward px-1"></i>
+    </a>
+</div>
+
+<script type="text/javascript">
+    'use strict';
+
+    function convertCoords() {
+        let img = document.getElementById('scheme-img');
+        let width = img.naturalWidth;
+        let height = img.naturalHeight;
+
+        document.querySelectorAll("#scheme-box .part-pos").forEach(function (node) {
+            let l = parseInt(node.style.left);
+            let t = parseInt(node.style.top);
+            let w = parseInt(node.style.width);
+            let h = parseInt(node.style.height);
+            node.style.left = (l / width * 100) + '%';
+            node.style.top = (t / height * 100) + '%';
+            node.style.width = (w / width * 100) + '%';
+            node.style.height = (h / height * 100) + '%';
+
+        });
+    }
+
+    let loaded = false;
+
+    function loadHandler() {
+        if (loaded) {
+            return;
+        }
+        loaded = true;
+        convertCoords()
+    }
+
+    const img = document.getElementById('scheme-img');
+    img.addEventListener('load', loadHandler);
+    if (img.complete) {
+        loadHandler();
+    }
+
+    /* Mirroring select element */
+    const list = document.querySelectorAll('[data-pos^=pos], [data-pos^=sch]');
+    const className = 'target';
+    const reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
+    window.onhashchange = function () {
+        for (let i = 0; i < list.length; i++) {
+            list[i].className = list[i].className.replace(reg, ' ');
+            if (list[i].dataset.pos === window.location.hash.replace('#', '')) {
+                list[i].className += ' ' + className;
+            }
+        }
+    };
+</script>

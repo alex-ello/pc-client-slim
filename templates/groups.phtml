@@ -1,0 +1,46 @@
+<?php
+/**
+ * @var \PartsCatalogsSlim\View\GroupsView $view;
+ */
+?>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-transparent pl-0 list-group-vertical">
+    <li class="breadcrumb-item"><a href="<?= $view->urlToCatalogs() ?>">Catalogs</a></li>
+    <li class="breadcrumb-item"><a href="<?= $view->urlToModels() ?>"><?= $view->catalogName() ?></a></li>
+    <li class="breadcrumb-item"><a href="<?= $view->urlToCars() ?>"><?= $view->modelName() ?></a>
+    </li>
+      <?php if ($view->isRoot()) { ?>
+        <li class="breadcrumb-item active">Groups</li>
+      <?php } else { ?>
+
+        <li class="breadcrumb-item"><a href="<?= $view->urlToGroups()?>">Groups</a>
+        </li>
+        <li class="breadcrumb-item active w-sm-100" aria-current="page">
+              <?= $view->currentGroupName() ?>
+        </li>
+      <?php } ?>
+  </ol>
+</nav>
+
+<?php require __DIR__ . "/layout-car.phtml" ?>
+
+<h3><?= $view->currentGroupName() ?: 'Groups' ?></h3>
+
+
+<div class="row mt-4">
+    <?php foreach ($view->groups() as $groupView) { ?>
+
+      <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 d-flex pb-2">
+        <a href="<?= $view->urlToGroupOrParts($groupView) ?>"
+           class="shadow list-group-item list-group-item-action rounded group-img-bg w-100"
+           style="background-image: url('<?= $groupView->img() ?>')">
+          <div class="group-img-gradient">
+              <span class="bg-white"><?= $groupView->name() ?></span>
+            <pre class="card-text"><small class="text-muted bg-white"><?= $groupView->description() ?></small></pre>
+          </div>
+        </a>
+      </div>
+
+    <?php } ?>
+</div>

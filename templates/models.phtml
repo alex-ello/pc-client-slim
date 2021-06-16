@@ -1,0 +1,36 @@
+<?php
+/**
+ * @var \PartsCatalogsSlim\View\ModelsView $view
+ */
+?>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mr-auto bg-transparent pl-0">
+        <li class="breadcrumb-item"><a href="<?= $view->urlToCatalogs() ?>">Catalogs</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><?= $view->catalogName() ?></li>
+    </ol>
+</nav>
+
+<h3>Models</h3>
+
+<?php $curFirsChar = null ?>
+<div class="cc-sm-1 cc-md-2 cc-lg-3">
+
+    <?php foreach ($view->groupedModels() as $group => $models) { ?>
+
+        <div>
+            <div class="pt-2"><span class="text-danger text-uppercase"><?= $group ?></span></div>
+            <?php foreach ($models as $model) { ?>
+                <div class="model-item">
+                    <a href="<?= $view->urlToCars($model->id) ?>" class="text-secondary d-none d-sm-inline">
+                        <?= $model->name ?>
+                    </a>
+                    <a href="<?= $view->urlToCars($model->id) ?>" class="text-secondary d-sm-none btn btn-link">
+                        <?= $model->name ?>
+                    </a>
+                </div>
+            <?php } ?>
+        </div>
+
+    <?php } ?>
+</div>

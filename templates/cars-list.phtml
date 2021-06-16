@@ -1,0 +1,130 @@
+<?php
+/**
+ * @var \PartsCatalogsExample\View\CarsView $view
+ */
+?>
+
+    <div class="row d-none d-md-flex pb-2">
+        <div class="col-md-4 col-sm-6"><small>Name</small></div>
+        <div class="col-md-6">
+            <div class="row">
+                <?php if ($view->hasYear()) { ?>
+                    <div class="d-none d-lg-block col-md-3 col-lg-2"><small>Year</small></div>
+                <?php } ?>
+                <?php if ($view->hasEngine()) { ?>
+                    <div class="d-none d-lg-block col-lg-5"><small>Engine</small></div>
+                <?php } ?>
+                <?php if ($view->hasTransmissionSimple()) { ?>
+                    <div class="d-none d-lg-block col-md"><small>Transmission</small></div>
+                <?php } ?>
+                <?php if (!$view->hasEngine() && !$view->hasTransmissionSimple()) { ?>
+                    <div class="col-md"><small>Description</small></div>
+                <?php } ?>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+
+<?php foreach ($view->cars() as $i => $carView) { ?>
+
+    <div class="row shadow rounded mb-3 pt-2 pb-2 car-row">
+        <div class="col-md-4 col-sm-12 pb-2">
+            <div>
+                <h4><?= $carView->name() ?></h4>
+            </div>
+            <div><small title="Body"><?= $carView->bodySummary() ?></small></div>
+
+            <?php if ($view->hasRegion()) { ?>
+                <a href="<?= $view->selectRegionUrl($carView->region()) ?>"
+                   class="badge badge-secondary"><?= $carView->region() ?></a>
+            <?php } ?>
+
+            <?php if ($view->hasSteering()) { ?>
+                <a href="<?= $view->selectSteeringUrl($carView->steering()) ?>"
+                   class="badge badge-info"><?= $carView->steering() ?></a>
+            <?php } ?>
+        </div>
+
+        <div class="col-md-6">
+            <div class="row pb-2">
+                <?php if ($view->hasYear()) { ?>
+                    <div class="col-md-12 col-lg-2" title="Year">
+                        <small class="d-lg-none text-muted">Year: </small>
+                        <a href="<?= $view->selectYearUrl($carView->year()) ?>" class="text-secondary"><?= $carView->year() ?></a>
+                    </div>
+                <?php } ?>
+
+                <?php if ($view->hasEngine()) { ?>
+                    <div class="col-lg-5 col-md-12">
+                        <div class="Engine">
+                            <small class="d-lg-none text-muted">Engine: </small>
+                            <a href="<?= $view->selectEngineUrl($carView->engine()) ?>" class="text-dark">
+                                <?= $carView->engine() ?>
+                            </a>
+                        </div>
+                        <?php if ($view->hasEngineCode()) { ?>
+                        <div>
+                            <small title="Engine code">
+                                <span class="d-lg-none text-muted">Engine code: </span>
+                                <?= $carView->engineCode() ?>
+                            </small>
+                        </div>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+
+                <?php if ($carView->hasTransmission() || $carView->hasTransmissionType()) { ?>
+                    <div class="col-lg col-md-12">
+                        <small class="d-lg-none text-muted">Transmission: </small>
+                        <?php if ($carView->hasTransmissionType()) { ?>
+                            <a href="<?= $view->selectTransmissionTypeUrl($carView->transmissionType()) ?>" class="text-dark">
+                                <?= $carView->transmissionType() ?>
+                            </a>
+                        <?php } ?>
+                        <?php if ($carView->hasTransmission()) { ?>
+                            <?= $carView->transmission() ?>
+                        <?php } ?>
+
+                    </div>
+                <?php } ?>
+
+                <?php if (!$view->hasEngine() && !$view->hasTransmissionSimple() && $carView->hasDescription()) { ?>
+                    <div class="col-md pb-2 text-muted" title="Description">
+                        <?= $carView->description() ?>
+                    </div>
+
+                <?php } ?>
+
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <a href="<?= $view->urlToGroups($carView->id(), $carView->criteria()) ?>"
+               class="btn btn-block btn-sm btn-outline-primary">Select</a>
+            <?php if ($carView->hasSecondaryParams() || $carView->hasDescription()) { ?>
+
+                <a class="btn btn-outline-secondary btn-sm btn-block" data-toggle="collapse" href="#dcr-<?= $i ?>"
+                   role="button"
+                   aria-expanded="false" aria-controls="dcr-<?= $i ?>">More info</a>
+            <?php } ?>
+        </div>
+
+
+        <div class="col-12">
+
+            <div class="collapse text-muted" id="dcr-<?= $i ?>">
+                <hr>
+                <?php foreach ($carView->secondaryParams() as $cp) { ?>
+                    <div><small><?= $view->carParameterName($cp->key) ?>:</small> <?= $cp->value ?></div>
+                <?php } ?>
+                <?php if ($view->hasEngine() || $view->hasTransmissionSimple()) { ?>
+                    <div class="pt-2">
+                        <?= $carView->description() ?>
+                    </div>
+                <?php } ?>
+            </div>
+
+        </div>
+
+    </div>
+<?php } ?>

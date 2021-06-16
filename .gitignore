@@ -1,0 +1,6 @@
+.DS_Store
+/vendor/
+/logs/*
+!/logs/README.md
+composer.phar
+/cache/*

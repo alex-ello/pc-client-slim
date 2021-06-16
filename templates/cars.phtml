@@ -1,0 +1,50 @@
+<?php
+/**
+ * @var \PartsCatalogsSlim\View\CarsView $view
+ */
+?>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-transparent pl-0">
+        <li class="breadcrumb-item"><a href="<?= $view->urlToCatalogs() ?>">Catalogs</a></li>
+        <li class="breadcrumb-item"><a href="<?= $view->urlToModels() ?>"><?= $view->catalogName() ?></a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page"><?= $view->modelName() ?></li>
+    </ol>
+</nav>
+
+<h3 class="float-left">Cars</h3>
+
+<div class="float-right d-block d-xl-none">
+    <span class="text-muted"><?= $view->carsCount() ?> / <?= $view->carsTotal() ?></span>
+    <?php if ($view->hasFilters()) { ?>
+    <a class="btn btn-light" href="<?= $view->urlToFilters() ?>">
+        <i class="fa fa-filter"></i>
+        <span class="badge badge-danger"><?= $view->filtersEnabled() ?></span>
+    </a>
+    <?php } ?>
+</div>
+<div class="clearfix"></div>
+<hr class="mt-1">
+
+<div class="row p-2 mt-3">
+
+    <?php if ($view->hasFilters()) { ?>
+
+        <div class="col-lg-12 col-xl-9">
+
+            <?php require __DIR__ . '/cars-list.phtml'; ?>
+
+        </div>
+        <div class="d-none d-xl-block col-xl-3">
+            <?php require __DIR__ . '/cars-filters.phtml'; ?>
+        </div>
+
+    <?php } else { ?>
+
+        <div class="col-sm-12">
+            <?php require __DIR__ . '/cars-list.phtml'; ?>
+        </div>
+
+    <?php } ?>
+</div>
+

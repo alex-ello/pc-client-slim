@@ -1,0 +1,33 @@
+<?php
+/**
+ * @var \PartsCatalogsSlim\View\CatalogsView $view ;
+ */
+?>
+<h3>Catalogs</h3>
+
+<div class="row shadow"></div>
+
+<div class="cc-sm-1 cc-md-2 cc-xs-3 mt-3">
+
+    <?php foreach ($view->groupedCatalogs() as $group => $catalogs) { ?>
+      <div class="col">
+        <div class="text-danger"><?= $group ?></div>
+        <div>
+          <ol class="catalogs d-flex list-inline flex-wrap p-0">
+              <?php foreach ($catalogs as $catalog) { ?>
+                <li class="catalog-item">
+                <a href="<?= $view->urlToModels($catalog->id) ?>" class="text-secondary d-none d-sm-inline">
+                    <?= $catalog->name ?>
+                </a>
+                <a href="<?= $view->urlToModels($catalog->id) ?>" class="text-secondary d-sm-none btn btn-link">
+                      <?= $catalog->name ?>
+                </a>
+                </li>
+              <?php } ?>
+          </ol>
+        </div>
+
+      </div>
+
+    <?php } ?>
+</div>

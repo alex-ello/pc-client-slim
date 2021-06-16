@@ -1,0 +1,190 @@
+<?php
+/**
+ * @var \PartsCatalogsSlim\View\VinView          $view    ;
+ * @var \PartsCatalogsSlim\View\CarsView\CarView $carView ;
+ */
+?>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mr-auto bg-transparent pl-0">
+        <li class="breadcrumb-item"><a href="/">Catalogs</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Search by VIN</li>
+    </ol>
+</nav>
+<h3>Search by VIN</h3>
+
+<form action="<?= $view->urlToVin() ?>" method="get">
+    <div class="row">
+        <div class="col-md">
+            <div class="input-group">
+                <label for="vin-search-input"></label>
+                <input class="form-control py-2 border-right-0 border" name="vin" value="<?= $view->vin() ?>"
+                       type="search"
+                       placeholder="VIN" id="vin-search-input">
+                <span class="input-group-append">
+                <button class="btn btn-outline-secondary border-left-0 border" type="submit">
+                    <i class="fa fa-search"></i>
+                </button>
+            </span>
+            </div>
+            <small class="form-text text-danger pl-1">
+                <?php if ($view->hasError()) { ?>
+                    <?= $view->error() ?>
+                <?php } ?>
+            </small>
+
+        </div>
+    </div>
+</form>
+
+
+<?php if ($view->ifNotFound()) { ?>
+    <!--        <h5 class="p-2 text-muted">Sorry. Car not found =(</h5>-->
+    <div class="alert alert-light" role="alert">
+        Sorry. Car not found =( <br>
+        <a href="<?= $view->urlToCatalogs() ?>" class="small">try select car manualy</a>
+    </div>
+<?php } else { ?>
+
+    <?php foreach ($view->carsGroupedByBrand() as $brand => $cars) { ?>
+
+        <div class="row pt-4">
+            <div class="col-md-4 col-sm-6"><h3 class="pb-2"><?= $brand ?></h3></div>
+            <div class="col-md-6">
+                <div class="row">
+                    <?php if ($view->hasYear()) { ?>
+                        <div class="d-none d-lg-block col-md-3 col-lg-2"><small>Year</small></div>
+                    <?php } ?>
+                    <?php if ($view->hasEngine()) { ?>
+                        <div class="d-none d-lg-block col-lg-5"><small>Engine</small></div>
+                    <?php } ?>
+                    <?php if ($view->hasTransmissionSimple()) { ?>
+                        <div class="d-none d-lg-block col-md"><small>Transmission</small></div>
+                    <?php } ?>
+                    <?php if (!$view->hasEngine() && !$view->hasTransmissionSimple()) { ?>
+                        <div class="col-md"><small>Description</small></div>
+                    <?php } ?>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+        <?php foreach ($cars as $i => $carView) { ?>
+
+            <div class="row shadow rounded mb-3 pt-2 pb-2 car-row">
+                <div class="col-md-4 col-sm-12 pb-2">
+                    <div>
+                        <h5><?= $carView->name() ?></h5>
+                    </div>
+                    <div><small title="Body"><?= $carView->bodySummary() ?></small></div>
+
+                    <?php if ($view->hasRegion()) { ?>
+                        <span class="badge badge-info"><?= $carView->region() ?></span>
+                    <?php } ?>
+
+                    <?php if ($view->hasSteering()) { ?>
+                        <span class="badge badge-info"><?= $carView->steering() ?></span>
+                    <?php } ?>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="row pb-2">
+                        <?php if ($view->hasYear()) { ?>
+                            <div class="col-md-12 col-lg-2" title="Year">
+                                <small class="d-lg-none">Year: </small><?= $carView->year() ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php if ($view->hasEngine()) { ?>
+                            <div class="col-lg-5 col-md-12">
+                                <div class="Engine">
+                                    <small class="d-lg-none">Engine: </small><?= $carView->engine() ?></div>
+                                <div>
+                                    <small title="Engine code">
+                                        <span class="d-lg-none">Engine code: </span><?= $carView->engineCode() ?>
+                                    </small>
+                                </div>
+                            </div>
+                        <?php } ?>
+
+                        <?php if ($view->hasTransmissionSimple()) { ?>
+                            <div class="col-lg col-md-12">
+                                <small class="d-lg-none">Transmission: </small>
+                                <?= $carView->transmissionTypeSimple() ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php if (!$view->hasEngine() && !$view->hasTransmissionSimple() && $carView->hasDescription()) { ?>
+                            <div class="col-md pb-2 text-muted" title="Description">
+                                <?= $carView->description() ?>
+                            </div>
+                        <?php } ?>
+
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <a href="<?= $view->urlToGroups($carView) ?>"
+                       class="btn btn-block btn-sm btn-outline-primary">Select</a>
+                    <?php if ($carView->hasSecondaryParams() || $carView->hasDescription()) { ?>
+
+                        <a class="btn btn-outline-secondary btn-sm btn-block" data-toggle="collapse"
+                           href="#dcr-<?= $i ?>"
+                           role="button"
+                           aria-expanded="false" aria-controls="dcr-<?= $i ?>">More info</a>
+                    <?php } ?>
+
+                    <?php if ($carView->hasOptionCodes()) { ?>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-block" data-toggle="modal"
+                                data-target="#mod-<?= $i ?>">
+                            Option codes
+                        </button>
+                    <?php } ?>
+
+                </div>
+
+
+                <div class="col-12">
+
+                    <div class="collapse text-muted" id="dcr-<?= $i ?>">
+                        <hr>
+                        <?php foreach ($carView->secondaryParams() as $cp) { ?>
+                            <div><small><?= $cp->name ?>:</small> <?= $cp->value ?></div>
+                        <?php } ?>
+                        <?php if ($view->hasEngine() || $view->hasTransmissionSimple()) { ?>
+                            <div class="pt-2">
+                                <?= $carView->description() ?>
+                            </div>
+                        <?php } ?>
+
+                    </div>
+
+                </div>
+
+                <?php if ($carView->hasOptionCodes()) { ?>
+                    <div class="modal fade" id="mod-<?= $i ?>" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-xl" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Option codes</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <?php foreach ($carView->optionCodes() as $optionCode) { ?>
+                                        <div>
+                                            <span class="text-monospace"><?= $optionCode->code ?> - </span>
+                                            <span class="font-weight-lighter"><?= $optionCode->description ?></span>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+            </div>
+        <?php } ?>
+    <?php } ?>
+<?php } ?>

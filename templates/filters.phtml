@@ -1,0 +1,94 @@
+<?php
+/**
+ * @var \PartsCatalogsSlim\View\FiltersView $view
+ */
+?>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-transparent pl-0">
+    <li class="breadcrumb-item"><a href="<?= $view->urlToCatalogs() ?>">Catalogs</a></li>
+    <li class="breadcrumb-item"><a href="<?= $view->urlToModels() ?>"><?= $view->catalogName() ?></a>
+    </li>
+    <li class="breadcrumb-item"><a href="<?= $view->urlToCars() ?>"><?= $view->modelName() ?></a></li>
+    <li class="breadcrumb-item active" aria-current="page">Parameters</li>
+  </ol>
+</nav>
+<h3>Parameters</h3>
+
+<div class="shadow p-3 mt-2 bg-white rounded">
+    <?php foreach ($view->filtersView() as $i => $filterView) { ?>
+
+      <label for="" class="text-muted text-right">
+        <small><?= $filterView->name() ?></small>
+      </label>
+      <div>
+
+          <?php if ($filterView->isSelected()) { ?>
+
+            <div class="btn-group btn-block" role="group">
+              <div class="btn-group btn-block" role="group">
+                <a id="btnGroupDrop<?= $i ?>" href="#" class="btn btn-light btn-block text-justify"
+                   data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    <?= $filterView->value() ?>
+                </a>
+                <div class="dropdown-menu w-100" aria-labelledby="btnGroupDrop<?= $i ?>">
+                    <?php foreach ($filterView->values() as $value) { ?>
+
+                        <?php if ($value->isSelected()) { ?>
+                        <a class="dropdown-item active"
+                           href="<?= $view->generateUrlForSelect($value) ?>"><?= $value ?></a>
+                        <?php } else { ?>
+                        <a class="dropdown-item disabled" href="#"><?= $value ?></a>
+                        <?php } ?>
+
+
+                    <?php } ?>
+                </div>
+              </div>
+              <a class="btn btn-secondary btn-light text-danger" href="<?= $view->generateUrlForReset($filterView) ?>">
+                  <i class="fa fa-times"></i>
+              </a>
+            </div>
+
+          <?php } else { ?>
+
+            <div class="dropdown btn-block">
+              <a class="btn btn-light btn-block text-justify" href="#" role="button" id="btnGroupDrop<?= $i ?>"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <?= $filterView->value() ?>
+              </a>
+
+              <div class="dropdown-menu w-100" aria-labelledby="btnGroupDrop<?= $i ?>">
+
+                  <?php foreach ($filterView->values() as $fsElementValue) { ?>
+
+                      <?php if ($fsElementValue->isAvailable()) { ?>
+                      <a class="dropdown-item" href="<?= $view->generateUrlForSelect($fsElementValue) ?>"><?= $fsElementValue ?></a>
+                      <?php } ?>
+
+                  <?php } ?>
+                  <?php if ($filterView->hasUnAvailableValues()) { ?>
+                    <div class="dropdown-divider"></div>
+                      <?php foreach ($filterView->values() as $fsElementValue) { ?>
+
+                          <?php if (!$fsElementValue->isAvailable()) { ?>
+                        <a class="dropdown-item disabled" href="#"><?= $fsElementValue ?></a>
+                          <?php } ?>
+
+                      <?php } ?>
+                  <?php } ?>
+              </div>
+            </div>
+
+          <?php } ?>
+
+
+      </div>
+    <?php } ?>
+</div>
+
+<div class="p-3">
+    <a href="<?= $view->urlToCars() ?>" class="btn btn-primary btn-block">
+        Show <?= $view->carsCount() ?> cars
+    </a>
+</div>

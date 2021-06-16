@@ -1,0 +1,19 @@
+<?php
+/**
+ * @var \PartsCatalogsSlim\View\ErrorView $view ;
+ */
+?>
+<div class="row">
+    <div class="col-12 offset-md-2 col-md-10 offset-lg-3 col-lg-6">
+        <div class="text-muted">
+            <h2>
+                <?= $view->code()?> <?= $view->message() ?></h2>
+            <div class="error-details">
+                <?= $view->details() ?>
+            </div>
+            <div class="error-actions pt-4">
+                <a href="javascript:history.go(-1)" class="btn btn-link pl-0">&lt; Go Back</a>
+            </div>
+        </div>
+    </div>
+</div>

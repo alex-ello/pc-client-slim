@@ -1,0 +1,94 @@
+<?php
+/**
+ * @var \PartsCatalogsSlim\View\PartsView $view             ;
+ * @var string                               $priceUrlTemplate ;
+ */
+?>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-transparent pl-0 list-group-vertical">
+        <li class="breadcrumb-item"><a href="<?= $view->urlToCatalogs() ?>">Catalogs</a></li>
+        <li class="breadcrumb-item"><a href="<?= $view->urlToModels() ?>"><?= $view->catalogName() ?></a></li>
+        <li class="breadcrumb-item"><a href="<?= $view->urlToCars() ?>"><?= $view->modelName() ?></a>
+        </li>
+        <li class="breadcrumb-item"><a
+                    href="<?= $view->urlToGroups() ?>">Groups</a>
+        </li>
+
+        <li class="breadcrumb-item active" aria-current="page">Parts</li>
+    </ol>
+</nav>
+
+<?php require __DIR__ . "/layout-car.phtml" ?>
+
+<h3><?= $view->currentGroupName() ?: 'Groups' ?></h3>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item w-50 text-center">
+        <a class="nav-link" href="<?= $view->urlToParts() ?>"><i class="fa fa-list pr-1"></i> Parts list</a>
+    </li>
+    <li class="nav-item w-50 text-center">
+        <a class="nav-link active" href="<?= $view->urlToSchema() ?>"><i class="fa fa-picture-o pr-1"></i> Schema</a>
+    </li>
+</ul>
+
+<div class="row">
+    <div class="col">
+        <div id="scheme-box" class="position-relative">
+
+            <?php foreach ($view->partsPositionsGrouped() as $positionNumber => $partsPositions) { ?>
+                <div class="scheme-pos" id="sch-<?= $positionNumber ?>">
+                    <?php foreach ($partsPositions as $pp) { ?>
+                        <a class="part-pos" href="<?= $view->urlToParts()?>#pos-<?= $pp->number ?>"
+                           style="left: <?= $pp->x; ?>px; top: <?= $pp->y ?>px; width: <?= $pp->w; ?>px; height: <?= $pp->h; ?>px;"></a>
+                    <?php } ?>
+                </div>
+            <?php } ?>
+            <img id="scheme-img" src="<?= $view->imgUrl() ?>" alt="" class="img-fluid w-100" style="">
+        </div>
+
+
+    </div>
+</div>
+
+
+
+<a href="<?= $view->urlToParts() ?>" class="btn btn-outline-secondary mt-1">
+    <i class="fa fa-step-backward px-1"></i> Back
+</a>
+
+<script type="text/javascript">
+    function convertCoords() {
+        var img = document.getElementById('scheme-img');
+        var width = img.naturalWidth;
+        var height = img.naturalHeight;
+
+        document.querySelectorAll("#scheme-box .part-pos").forEach(function (node) {
+            var l = parseInt(node.style.left);
+            var t = parseInt(node.style.top);
+            var w = parseInt(node.style.width);
+            var h = parseInt(node.style.height);
+            node.style.left = (l / width * 100) + '%';
+            node.style.top = (t / height * 100) + '%';
+            node.style.width = (w / width * 100) + '%';
+            node.style.height = (h / height * 100) + '%';
+
+        });
+    }
+
+    var loaded = false;
+
+    function loadHandler() {
+        if (loaded) {
+            return;
+        }
+        loaded = true;
+        convertCoords()
+    }
+
+    var img = document.getElementById('scheme-img');
+    img.addEventListener('load', loadHandler);
+    if (img.complete) {
+        loadHandler();
+    }
+</script>

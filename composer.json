@@ -1,0 +1,53 @@
+{
+    "name": "alex-ello/pc-client-slim",
+    "description": "Simple client for api.parts-catalogs.com based on PHP Slim framework.",
+    "keywords": [
+        "microframework",
+        "rest",
+        "router",
+        "psr7"
+    ],
+    "homepage": "https://github.com/alex-ello/pc-client-slim",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alex",
+            "email": "systemalex@mail.ru",
+            "homepage": "https://github.com/alex-ello/"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "guzzlehttp/guzzle": "^6.3",
+        "kevinrob/guzzle-cache-middleware": "^3.3",
+        "kodus/file-cache": "^1.1",
+        "monolog/monolog": "^1.17",
+        "psr/simple-cache": "^1.0",
+        "slim/http-cache": "0.4.*",
+        "slim/php-view": "^2.0",
+        "slim/slim": "3.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": ">=5.0",
+        "codeception/module-asserts": "^1.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PartsCatalogsSlim\\": "src/PartsCatalogsSlim",
+            "PartsCatalogsClient\\": "src/PartsCatalogsClient"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "process-timeout": 0,
+        "sort-packages": true
+    },
+    "scripts": {
+        "start": "php -S localhost:8080 -t public",
+        "test": "phpunit"
+    }
+}
