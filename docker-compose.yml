@@ -2,12 +2,28 @@ version: '3'
 
 services:
   pc-client-slim:
-    image: php:7.4
+    image: php:8.2.4
     environment:
       docker: "true"
     ports:
-      - 8080:8080
+      - "8080:8080"
     command: "php -S 0.0.0.0:8080 -t /var/www/public"
     volumes:
       - .:/var/www
       - ./logs:/var/www/logs
+
+  composer-prod:
+    image: composer:2.5
+    volumes:
+      - .:/app
+    command: "composer install --optimize-autoloader --ignore-platform-reqs --no-ansi --no-dev"
+    profiles:
+      - prod
+
+  composer-dev:
+    image: composer:2.5
+    volumes:
+      - .:/app
+    command: "composer install --optimize-autoloader --ignore-platform-reqs --no-ansi"
+    profiles:
+      - dev

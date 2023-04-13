@@ -4,3 +4,4 @@
 !/logs/README.md
 composer.phar
 /cache/*
+/.idea/

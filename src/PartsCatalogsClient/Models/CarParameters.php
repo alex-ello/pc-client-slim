@@ -13,7 +13,7 @@ class CarParameters implements Iterator
      */
     private $map = [];
 
-    public static function fromArray($array)
+    public static function fromArray($array): CarParameters
     {
         $obj = new CarParameters();
 
@@ -48,7 +48,7 @@ class CarParameters implements Iterator
      * @return mixed Can return any type.
      * @since 5.0.0
      */
-    public function current()
+    public function current(): mixed
     {
         return current($this->list);
     }
@@ -59,7 +59,7 @@ class CarParameters implements Iterator
      * @return void Any returned value is ignored.
      * @since 5.0.0
      */
-    public function next()
+    public function next(): void
     {
         next($this->list);
     }
@@ -70,7 +70,7 @@ class CarParameters implements Iterator
      * @return mixed scalar on success, or null on failure.
      * @since 5.0.0
      */
-    public function key()
+    public function key(): mixed
     {
         return key($this->list);
     }
@@ -82,7 +82,7 @@ class CarParameters implements Iterator
      * Returns true on success or false on failure.
      * @since 5.0.0
      */
-    public function valid()
+    public function valid(): bool
     {
         return key($this->list) !== null;
     }
@@ -93,7 +93,7 @@ class CarParameters implements Iterator
      * @return void Any returned value is ignored.
      * @since 5.0.0
      */
-    public function rewind()
+    public function rewind(): void
     {
         reset($this->list);
     }

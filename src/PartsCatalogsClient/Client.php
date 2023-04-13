@@ -296,7 +296,7 @@ class Client
 
         try {
             $response = $this->getClient()->get($path, $options);
-            $body     = $response->getBody();
+            $body     = $response->getBody()->getContents();
             $array    = \GuzzleHttp\json_decode($body, true);
         } catch (Exception $e) {
             throw new ClientException($e->getMessage(), $e->getCode(), $e);

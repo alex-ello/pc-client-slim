@@ -4,8 +4,9 @@ namespace PartsCatalogsClient\Models;
 
 class NameString
 {
-    public static function beautify($name)
+    public static function beautify(?string $name): string
     {
+        $name = (string)$name;
         $name = preg_replace("/\s*([\/&])\s*/i", " $1 ", $name);
         $name = preg_replace("/(,)(?=\w)/i", "$1 ", $name);
         $name = mb_strtolower($name, 'UTF-8');

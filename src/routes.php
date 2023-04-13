@@ -7,7 +7,6 @@ use Slim\App;
  * @param App $app
  */
 return function (App $app) {
-    $app->getContainer();
 
     $app->get('/', Router::CATALOGS_ACTION);
     $app->get('/vin/', Router::VIN_ACTION);
